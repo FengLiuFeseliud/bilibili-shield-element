@@ -6,7 +6,9 @@
   "include": [
     ".plasmo/index.d.ts",
     "./**/*.ts",
-    "./**/*.tsx"
+    "./**/*.tsx",
+    "./**/*.scss",
+    "./**/*.svg"
   ],
   "compilerOptions": {
     "paths": {
@@ -14,6 +16,7 @@
         "./*"
       ]
     },
-    "baseUrl": "."
+    "baseUrl": ".",
+    "plugins": [{ "name": "typescript-plugin-css-modules" }]
   }
 }
