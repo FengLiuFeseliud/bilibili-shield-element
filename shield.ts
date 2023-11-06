@@ -74,8 +74,11 @@ enum ReplyShieldType{
     NONE = "none",
     SAILING = "装扮勋章",
     AVATAR_FRAME = "头像框",
+    EMOJI = "表情",
+    EMOJI_SMALL = "小表情",
     USER_LEVEL = "用户等级",
-    USER_ID = "用户 UID"
+    USER_ID = "用户 UID",
+    KEY_WORD = "关键词"
 }
 
 
@@ -101,6 +104,20 @@ class ReplyShield extends Shield{
             return ReplyShieldType.AVATAR_FRAME
         }
         
+        var rootReplyNode = <HTMLElement>node.getElementsByClassName("root-reply-container").item(0)
+        
+        nodeTest = rootReplyNode.getElementsByClassName("emoji-large")
+        if(await Config.config.nodeAttributeInConfigList(nodeTest, "emojiShieldList", (config, node) => config == node.getAttribute("src"))
+                || (nodeTest.length != 0 && await Config.config.getBool("emojiAllShield"))){
+            return ReplyShieldType.EMOJI
+        }
+
+        nodeTest = rootReplyNode.getElementsByClassName("emoji-small")
+        if(await Config.config.nodeAttributeInConfigList(nodeTest, "emojiSmallShieldList", (config, node) => config == node.getAttribute("src"))
+                || (nodeTest.length != 0 && await Config.config.getBool("emojiSmallAllShield"))){
+            return ReplyShieldType.EMOJI_SMALL
+        }
+        
         for(let index = 0; index < await Config.config.getInt("userLevelShield"); index++){
             if(node.getElementsByClassName("user-info").item(0).getElementsByClassName("level-" + index).length != 0){
                 return ReplyShieldType.USER_LEVEL
@@ -110,6 +127,11 @@ class ReplyShield extends Shield{
         var userIdConfig = await Config.config.getInt("userIdShield")
         if(Number(node.getElementsByClassName("root-reply-avatar").item(0).getAttribute("data-user-id")) > userIdConfig && userIdConfig > 0){
             return ReplyShieldType.USER_ID
+        }
+
+        nodeTest = rootReplyNode.getElementsByClassName("reply-content")
+        if(await Config.config.nodeAttributeInConfigList(nodeTest, "keyWordsShieldList", (config: string, node) => node.innerText.indexOf(config) != -1)){
+            return ReplyShieldType.KEY_WORD
         }
 
         return ReplyShieldType.NONE

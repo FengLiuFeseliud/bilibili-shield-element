@@ -13,6 +13,10 @@ function setTextareaValue(look: string, setValue: (setter: any) => Promise<void>
     setValue(String(look).split("\n"))
 }
 
+function setKeyWordsShieldListValue(look: string, setValue: (setter: any) => Promise<void>){
+    setValue(String(look).split("\n").join().split(","))
+}
+
 
 function options() {
     // 屏蔽显示
@@ -27,6 +31,11 @@ function options() {
     const [lookSailingShieldList, setSailingShieldList] = useStorage("sailingShieldList")
     const [lookAvatarFrameAllShield, setAvatarFrameAllShield] = useStorage("avatarFrameAllShield")
     const [lookAvatarFrameShieldList, setAvatarFrameShieldList] = useStorage("avatarFrameShieldList")
+    const [lookEmojiAllShield, setEmojiAllShield] = useStorage("emojiAllShield")
+    const [lookEmojiShieldList, setEmojiShieldList] = useStorage("emojiShieldList")
+    const [lookEmojiSmallAllShield, setEmojiSmallAllShield] = useStorage("emojiSmallAllShield")
+    const [lookEmojiSmallShieldList, setEmojiSmallShieldList] = useStorage("emojiSmallShieldList")
+    const [lookKeyWordsShieldList, setKeyWordsShieldList] = useStorage("keyWordsShieldList")
 
     // 配置菜单
     const [lookBackgroundUrl, setBackgroundUrl] = useStorage("backgroundUrl")
@@ -34,9 +43,9 @@ function options() {
     return (
         <div className={style.body} style={{backgroundImage: "url("+lookBackgroundUrl+")"}}><div className={style.cover}>
             <div className={style.title}>
-                <span className={style.name}><span>Bilibili</span> Shield Element</span><span className={style.version}>0.1.0</span>
-                <a href="https://github.com/FengLiuFeseliud/bilibili-shield-element">{githubIcon()}</a>
-                <a href="https://space.bilibili.com/34394509">{bilibiliIcon()}</a>
+                <span className={style.name}><span>Bilibili</span> Shield Element</span><span className={style.version}>0.2.0</span>
+                <a href="https://github.com/FengLiuFeseliud/bilibili-shield-element">{githubIcon(null)}</a>
+                <a href="https://space.bilibili.com/34394509">{bilibiliIcon(null)}</a>
                 <hr></hr>
             </div>
 
@@ -93,6 +102,52 @@ function options() {
                     </label>
                     <input id="userIdShield" type="text" value={lookUserIdShield} onChange={(e) => setUserIdShield(e.target.value)}/>
                 </div>
+                
+                <div className={style["config-item"]}>
+                    <label htmlFor="emojiAllShield">
+                        <span>屏蔽有表情的所有评论</span>
+                        <span className={style["config-item-sub-info"]}>屏蔽所有有表情的评论, 如大号黄豆的表情, true 启动屏蔽</span>
+                    </label>
+                    <select id="emojiAllShield" value={lookEmojiAllShield} onChange={(e) => setEmojiAllShield(e.target.value)}>
+                        <option value="true">True</option>
+                        <option value="false">False</option>
+                    </select>
+                </div>
+
+                <div className={style["config-item"]}>
+                    <label htmlFor="emojiShieldList">
+                        <span>按表情屏蔽评论</span>
+                        <span className={style["config-item-sub-info"]}>屏蔽指定表情的所有评论, 如大号黄豆的表情, 检测表情图片链接</span>
+                    </label>
+                    <textarea 
+                        id="emojiShieldList" 
+                        value={getTextareaValue(lookEmojiShieldList)} 
+                        onChange={(e) => setTextareaValue(e.target.value, setEmojiShieldList)}
+                    ></textarea>
+                </div>
+
+                <div className={style["config-item"]}>
+                    <label htmlFor="emojiSmallAllShield">
+                        <span>屏蔽有小表情的所有评论</span>
+                        <span className={style["config-item-sub-info"]}>屏蔽所有有小表情的评论, 如B站狗头, true 启动屏蔽</span>
+                    </label>
+                    <select id="emojiSmallAllShield" value={lookEmojiSmallAllShield} onChange={(e) => setEmojiSmallAllShield(e.target.value)}>
+                        <option value="true">True</option>
+                        <option value="false">False</option>
+                    </select>
+                </div>
+
+                <div className={style["config-item"]}>
+                    <label htmlFor="emojiSmallShieldList">
+                        <span>按小表情屏蔽评论</span>
+                        <span className={style["config-item-sub-info"]}>屏蔽指定表情的所有评论, 如B站狗头, 检测表情图片链接(ps: 屏蔽自带 emoji 请使用关键词屏蔽)</span>
+                    </label>
+                    <textarea 
+                        id="emojiSmallShieldList" 
+                        value={getTextareaValue(lookEmojiSmallShieldList)} 
+                        onChange={(e) => setTextareaValue(e.target.value, setEmojiSmallShieldList)}
+                    ></textarea>
+                </div>
 
                 <div className={style["config-item"]}>
                     <label htmlFor="sailingAllShield">
@@ -137,6 +192,18 @@ function options() {
                         id="avatarFrameShieldList" 
                         value={getTextareaValue(lookAvatarFrameShieldList)} 
                         onChange={(e) => setTextareaValue(e.target.value, setAvatarFrameShieldList)}
+                    ></textarea>
+                </div>
+
+                <div className={style["config-item"]}>
+                    <label htmlFor="keyWordsShieldList">
+                        <span>按关键词屏蔽评论</span>
+                        <span className={style["config-item-sub-info"]}>屏蔽指定关键词的所有评论, 检测评论内容</span>
+                    </label>
+                    <textarea 
+                        id="keyWordsShieldList" 
+                        value={lookKeyWordsShieldList} 
+                        onChange={(e) => setKeyWordsShieldListValue(e.target.value, setKeyWordsShieldList)}
                     ></textarea>
                 </div>
 

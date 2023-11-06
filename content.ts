@@ -17,4 +17,3 @@ window.onload = async function(){
         new ReplyShield().start()
     }
 }
-
