@@ -78,7 +78,10 @@ enum ReplyShieldType{
     EMOJI_SMALL = "小表情",
     USER_LEVEL = "用户等级",
     USER_ID = "用户 UID",
-    KEY_WORD = "关键词"
+    KEY_WORD = "关键词",
+    REGULAR = "正则匹配",
+    JUMP_LINK_SEARCH = "跳转搜索",
+    JUMP_LINK_NORMAL = "跳转链接"
 }
 
 
@@ -130,8 +133,24 @@ class ReplyShield extends Shield{
         }
 
         nodeTest = rootReplyNode.getElementsByClassName("reply-content")
-        if(await Config.config.nodeAttributeInConfigList(nodeTest, "keyWordsShieldList", (config: string, node) => node.innerText.indexOf(config) != -1)){
+        if(await Config.config.nodeAttributeInConfigList(nodeTest, "keyWordsShieldList", (config: string, node) => node.innerText.indexOf(config) != -1 && config != "")){
             return ReplyShieldType.KEY_WORD
+        }
+
+        if(await Config.config.nodeAttributeInConfigList(nodeTest, "regularShieldList", (config: string, node) => node.innerText.search(config) != -1 && config != "")){
+            return ReplyShieldType.REGULAR
+        }
+
+        if(await Config.config.getBool("jumpSearchShield")){
+            if((<HTMLElement>nodeTest.item(0)).querySelector(".jump-link.search-word") != null){
+                return ReplyShieldType.JUMP_LINK_SEARCH
+            }
+        }
+
+        if(await Config.config.getBool("jumpNormalShield")){
+            if((<HTMLElement>nodeTest.item(0)).querySelector(".jump-link.normal") != null){
+                return ReplyShieldType.JUMP_LINK_NORMAL
+            }
         }
 
         return ReplyShieldType.NONE
@@ -190,5 +209,56 @@ class ReplyShield extends Shield{
     }
 }
 
+enum caedShieldType {
+    NONE = "none",
+    CAROUSEL = "carousel",
+    ADVERTISE = "advertise",
+    SINGLE_CARD = "single-card"
+}
 
-export {ReplyShield}
+
+class CardShield extends Shield{
+    static CARD_DIV_PAHT = ".container.is-version8"
+
+    getObserverPath() {
+        return CardShield.CARD_DIV_PAHT
+    }
+
+    async getShieldNodeType(node: HTMLElement): Promise<caedShieldType> {
+        var className = node.getAttribute("class")
+        if(await Config.config.getBool("homePageCarouselShield") && (className == "recommended-swipe grid-anchor" || className == "feed-card")){
+            if(className == "recommended-swipe grid-anchor"){
+                return caedShieldType.CAROUSEL
+            }
+
+            if(className == "feed-card"){
+                
+            }
+        }
+
+        if(await Config.config.getBool("advertiseShield")){
+            if(node.getElementsByClassName("bili-video-card__info--ad").length != 0){
+                return caedShieldType.ADVERTISE
+            }
+        }
+
+        if(await Config.config.getBool("floatCardShield")){
+            if(className.indexOf("single-card") != -1){
+                return caedShieldType.SINGLE_CARD
+            }
+        }
+
+        return caedShieldType.NONE
+    }
+
+    async shieldNode(node: HTMLElement, shieldType: caedShieldType): Promise<void> {
+        if(shieldType == caedShieldType.CAROUSEL){
+            node.style.display = "none"
+            return
+        }
+        node.style.display = "none"
+    }
+}
+
+
+export {ReplyShield, CardShield}

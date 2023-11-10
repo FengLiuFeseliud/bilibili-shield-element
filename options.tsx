@@ -23,10 +23,17 @@ function options() {
     const [lookShieldInfo, setShieldInfo] = useStorage("shieldInfo")
     const [lookRootAndSubReplyShield, setRootAndSubReplyShield] = useStorage("rootAndSubReplyShield")
 
+    // 视频卡屏蔽
+    const [lookHomePageCarouselShield, setHomePageCarouselShield] = useStorage("homePageCarouselShield")
+    const [lookAdvertiseShield, setAdvertiseShield] = useStorage("advertiseShield")
+    const [lookFloatCardShield, setFloatCardShield] = useStorage("floatCardShield")
+
     // 评论屏蔽
     const [lookOnReplyShield, setOnReplyShield] = useStorage("onReplyShield")
     const [lookUserIdShield, setUserIdShield] = useStorage("userIdShield")
     const [lookUserLevelShield, setUserLevelShield] = useStorage("userLevelShield")
+    const [lookJumpSearchShield, setJumpSearchShield] = useStorage("jumpSearchShield")
+    const [lookJumpNormalShield, setJumpNormalShield] = useStorage("jumpNormalShield")
     const [lookSailingAllShield, setSailingAllShield] = useStorage("sailingAllShield")
     const [lookSailingShieldList, setSailingShieldList] = useStorage("sailingShieldList")
     const [lookAvatarFrameAllShield, setAvatarFrameAllShield] = useStorage("avatarFrameAllShield")
@@ -36,6 +43,7 @@ function options() {
     const [lookEmojiSmallAllShield, setEmojiSmallAllShield] = useStorage("emojiSmallAllShield")
     const [lookEmojiSmallShieldList, setEmojiSmallShieldList] = useStorage("emojiSmallShieldList")
     const [lookKeyWordsShieldList, setKeyWordsShieldList] = useStorage("keyWordsShieldList")
+    const [lookRegularShieldList, setRegularShieldList] = useStorage("regularShieldList")
 
     // 配置菜单
     const [lookBackgroundUrl, setBackgroundUrl] = useStorage("backgroundUrl")
@@ -75,6 +83,42 @@ function options() {
 
                 <hr></hr>
 
+                <h1>视频卡屏蔽</h1>
+                <div className={style["config-item"]}>
+                    <label htmlFor="homePageCarouselShield">
+                        <span>主页轮播图屏蔽</span>
+                        <span className={style["config-item-sub-info"]}>屏蔽主页轮播图, 轮播图为主页变化大图, true 启动屏蔽</span>
+                    </label>
+                    <select id="homePageCarouselShield" value={lookHomePageCarouselShield} onChange={(e) => setHomePageCarouselShield(e.target.value)}>
+                        <option value="true">True</option>
+                        <option value="false">False</option>
+                    </select>
+                </div>
+
+                <div className={style["config-item"]}>
+                    <label htmlFor="advertiseShield">
+                        <span>视频卡广告屏蔽</span>
+                        <span className={style["config-item-sub-info"]}>屏蔽视频卡广告, 如视频卡广告为一块视频区域文字中有广告图标, true 启动屏蔽</span>
+                    </label>
+                    <select id="advertiseShield" value={lookAdvertiseShield} onChange={(e) => setAdvertiseShield(e.target.value)}>
+                        <option value="true">True</option>
+                        <option value="false">False</option>
+                    </select>
+                </div>
+                
+                <div className={style["config-item"]}>
+                    <label htmlFor="floatCardShield">
+                        <span>浮动视频卡屏蔽</span>
+                        <span className={style["config-item-sub-info"]}>屏蔽浮动视频卡, 如视频卡旁边有阴影, true 启动屏蔽</span>
+                    </label>
+                    <select id="floatCardShield" value={lookFloatCardShield} onChange={(e) => setFloatCardShield(e.target.value)}>
+                        <option value="true">True</option>
+                        <option value="false">False</option>
+                    </select>
+                </div>
+
+                <hr></hr>
+
                 <h1>评论屏蔽</h1>
                 <div className={style["config-item"]}>
                     <label htmlFor="onReplyShield">
@@ -102,6 +146,28 @@ function options() {
                     </label>
                     <input id="userIdShield" type="text" value={lookUserIdShield} onChange={(e) => setUserIdShield(e.target.value)}/>
                 </div>
+
+                <div className={style["config-item"]}>
+                    <label htmlFor="jumpSearchShield">
+                        <span>屏蔽有搜索跳转的评论</span>
+                        <span className={style["config-item-sub-info"]}>屏蔽有搜索跳转的评论, 如什么什么后面跟搜索的蓝色链接, true 启动屏蔽</span>
+                    </label>
+                    <select id="jumpSearchShield" value={lookJumpSearchShield} onChange={(e) => setJumpSearchShield(e.target.value)}>
+                        <option value="true">True</option>
+                        <option value="false">False</option>
+                    </select>
+                </div>
+
+                <div className={style["config-item"]}>
+                    <label htmlFor="jumpNormalShiel">
+                        <span>屏蔽有外部跳转的评论</span>
+                        <span className={style["config-item-sub-info"]}>屏蔽有外部跳转的评论, 如什么什么前面淘宝/京东的蓝色链接, true 启动屏蔽</span>
+                    </label>
+                    <select id="jumpNormalShiel" value={lookJumpNormalShield} onChange={(e) => setJumpNormalShield(e.target.value)}>
+                        <option value="true">True</option>
+                        <option value="false">False</option>
+                    </select>
+                </div>
                 
                 <div className={style["config-item"]}>
                     <label htmlFor="emojiAllShield">
@@ -117,7 +183,7 @@ function options() {
                 <div className={style["config-item"]}>
                     <label htmlFor="emojiShieldList">
                         <span>按表情屏蔽评论</span>
-                        <span className={style["config-item-sub-info"]}>屏蔽指定表情的所有评论, 如大号黄豆的表情, 检测表情图片链接</span>
+                        <span className={style["config-item-sub-info"]}>屏蔽指定表情的所有评论, 如大号黄豆的表情, 检测表情图片链接, 换行添加多个表情</span>
                     </label>
                     <textarea 
                         id="emojiShieldList" 
@@ -140,7 +206,7 @@ function options() {
                 <div className={style["config-item"]}>
                     <label htmlFor="emojiSmallShieldList">
                         <span>按小表情屏蔽评论</span>
-                        <span className={style["config-item-sub-info"]}>屏蔽指定表情的所有评论, 如B站狗头, 检测表情图片链接(ps: 屏蔽自带 emoji 请使用关键词屏蔽)</span>
+                        <span className={style["config-item-sub-info"]}>屏蔽指定表情的所有评论, 如B站狗头, 检测表情图片链接(ps: 屏蔽自带 emoji 请使用关键词屏蔽), 换行添加多个小表情</span>
                     </label>
                     <textarea 
                         id="emojiSmallShieldList" 
@@ -163,7 +229,7 @@ function options() {
                 <div className={style["config-item"]}>
                     <label htmlFor="sailingShieldList">
                         <span>按用户装扮勋章屏蔽评论</span>
-                        <span className={style["config-item-sub-info"]}>屏蔽指定装扮勋章的所有评论, 检测装扮勋章图片链接</span>
+                        <span className={style["config-item-sub-info"]}>屏蔽指定装扮勋章的所有评论, 检测装扮勋章图片链接, 换行添加多个装扮勋章</span>
                     </label>
                     <textarea 
                         id="sailingShieldList"
@@ -186,7 +252,7 @@ function options() {
                 <div className={style["config-item"]}>
                     <label htmlFor="avatarFrameShieldList">
                         <span>按用户头像框屏蔽评论</span>
-                        <span className={style["config-item-sub-info"]}>屏蔽指定头像框的所有评论, 检测头像框图片链接</span>
+                        <span className={style["config-item-sub-info"]}>屏蔽指定头像框的所有评论, 检测头像框图片链接, 换行添加多个头像框</span>
                     </label>
                     <textarea 
                         id="avatarFrameShieldList" 
@@ -198,12 +264,24 @@ function options() {
                 <div className={style["config-item"]}>
                     <label htmlFor="keyWordsShieldList">
                         <span>按关键词屏蔽评论</span>
-                        <span className={style["config-item-sub-info"]}>屏蔽指定关键词的所有评论, 检测评论内容</span>
+                        <span className={style["config-item-sub-info"]}>屏蔽指定关键词的所有评论, 检测评论内容, 使用 "," 分割不同词</span>
                     </label>
                     <textarea 
                         id="keyWordsShieldList" 
                         value={lookKeyWordsShieldList} 
                         onChange={(e) => setKeyWordsShieldListValue(e.target.value, setKeyWordsShieldList)}
+                    ></textarea>
+                </div>
+
+                <div className={style["config-item"]}>
+                    <label htmlFor="regularShieldList">
+                        <span>正则表达式屏蔽评论</span>
+                        <span className={style["config-item-sub-info"]}>使用正则表达式屏蔽所有匹配评论, 匹配方法使用 js 字符串 search(), 换行添加多个表达式</span>
+                    </label>
+                    <textarea 
+                        id="regularShieldList" 
+                        value={lookRegularShieldList} 
+                        onChange={(e) => setTextareaValue(e.target.value, setRegularShieldList)}
                     ></textarea>
                 </div>
 
