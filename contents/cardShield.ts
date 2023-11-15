@@ -4,7 +4,7 @@ import {Config} from "~config"
 
 export const cardShieldConfig: PlasmoCSConfig = {
   matches: [
-    "*://www.bilibili.com"
+    "*://www.bilibili.com/"
   ],
   all_frames: true
 }

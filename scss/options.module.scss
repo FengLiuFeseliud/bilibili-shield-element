@@ -90,6 +90,15 @@
         opacity: 0.8;
     }
 
+    button {
+        float: right;
+        width: 15%;
+        height: 60%;
+        margin: 1.4% 0 1% 0;
+        text-align: center;
+        opacity: 0.8;
+    }
+
     textarea {
         margin-top: 5px;
         width: 100%;
@@ -104,5 +113,20 @@
         display: block;
         font-size: 15px;
         text-align: center;
+    }
+}
+
+.shield-set {
+    p {
+        width: 52.4%;
+        margin: 10px auto;
+        font-size: 1.2rem;
+    }
+
+    img {
+        display: block;
+        margin: 10px auto;
+        background-color: gray;
+        opacity: 0.8;
     }
 }

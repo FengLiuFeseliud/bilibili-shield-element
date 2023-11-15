@@ -4,6 +4,8 @@ import {Config} from "config.js"
 abstract class Shield{
     protected mutationNode: Element = null
     protected observer: MutationObserver = new MutationObserver((mutationList, _) => { mutationList.forEach(this.mutationForEach) })
+    private allNodeSize: number = 0
+    private nodeShieldSize: number = 0
 
     // 我第一次弄过 ts 这箭头竟然要拆出来?? 怪
     private mutationForEach = async (mutation: MutationRecord) => {
@@ -30,7 +32,8 @@ abstract class Shield{
         }
 
         this.observer.observe(this.mutationNode, {
-            childList: true
+            childList: true,
+            subtree: true
         })
         console.log("bilibili-shield-element: " + this + " 加载")
     }
@@ -40,17 +43,27 @@ abstract class Shield{
             return
         }
         
+        this.allNodeSize ++
         try{
             var shieldNodeTpye = await this.getShieldNodeType(node)
             if(shieldNodeTpye != "none"){
+                this.nodeShieldSize ++
                 await this.shieldNode(node, shieldNodeTpye)
             }
         } catch(e){
-            console.error(e)
             return
         }
     }
 
+    
+    public getAllNodeSize() : number {
+        return  this.allNodeSize
+    }
+
+    public getNodeShieldSize() : number {
+        return  this.nodeShieldSize
+    }
+    
     /**
      * 获取监听节点路径
      */
@@ -137,7 +150,7 @@ class ReplyShield extends Shield{
             return ReplyShieldType.KEY_WORD
         }
 
-        if(await Config.config.nodeAttributeInConfigList(nodeTest, "regularShieldList", (config: string, node) => node.innerText.search(config) != -1 && config != "")){
+        if(nodeTest.item(0).innerHTML.search(await Config.config.getStorage().get("regularShieldList"))){
             return ReplyShieldType.REGULAR
         }
 
@@ -209,11 +222,13 @@ class ReplyShield extends Shield{
     }
 }
 
-enum caedShieldType {
+
+enum CaedShieldType {
     NONE = "none",
     CAROUSEL = "carousel",
     ADVERTISE = "advertise",
-    SINGLE_CARD = "single-card"
+    SINGLE_CARD = "single-card",
+    REGULAR = "regular"
 }
 
 
@@ -224,41 +239,56 @@ class CardShield extends Shield{
         return CardShield.CARD_DIV_PAHT
     }
 
-    async getShieldNodeType(node: HTMLElement): Promise<caedShieldType> {
+    async getShieldNodeType(node: HTMLElement): Promise<CaedShieldType> {
         var className = node.getAttribute("class")
-        if(await Config.config.getBool("homePageCarouselShield") && (className == "recommended-swipe grid-anchor" || className == "feed-card")){
+        if(await Config.config.getBool("homePageCarouselShield") && className == "recommended-swipe grid-anchor"){
             if(className == "recommended-swipe grid-anchor"){
-                return caedShieldType.CAROUSEL
-            }
-
-            if(className == "feed-card"){
-                
+                return CaedShieldType.CAROUSEL
             }
         }
 
         if(await Config.config.getBool("advertiseShield")){
             if(node.getElementsByClassName("bili-video-card__info--ad").length != 0){
-                return caedShieldType.ADVERTISE
+                return CaedShieldType.ADVERTISE
             }
         }
 
         if(await Config.config.getBool("floatCardShield")){
             if(className.indexOf("single-card") != -1){
-                return caedShieldType.SINGLE_CARD
+                return CaedShieldType.SINGLE_CARD
             }
         }
 
-        return caedShieldType.NONE
+        var nodeTest: HTMLCollectionOf<Element>
+        if(node.getElementsByClassName("loading_animation").length != 0 || className.indexOf("load-more-anchor") != -1){
+            return CaedShieldType.NONE
+        }
+
+        if(className.indexOf("single-card") == -1){
+            nodeTest = node.getElementsByClassName("bili-video-card__info--tit")
+            if(nodeTest.item(0).getAttribute("title").search(await Config.config.getStorage().get("cardRegularShieldList")) != -1){
+                return CaedShieldType.REGULAR
+            }
+        } else {
+            nodeTest = node.getElementsByClassName("title")
+            if(nodeTest.item(0).getAttribute("title").search(await Config.config.getStorage().get("cardRegularShieldList")) != -1){
+                return CaedShieldType.REGULAR
+            }
+        }
+        
+        return CaedShieldType.NONE
     }
 
-    async shieldNode(node: HTMLElement, shieldType: caedShieldType): Promise<void> {
-        if(shieldType == caedShieldType.CAROUSEL){
+    async shieldNode(node: HTMLElement, shieldType: CaedShieldType): Promise<void> {
+        console.log(shieldType)
+        if(shieldType == CaedShieldType.CAROUSEL){
             node.style.display = "none"
             return
         }
+
         node.style.display = "none"
     }
 }
 
 
-export {ReplyShield, CardShield}
+export {ReplyShield, ReplyShieldType, CardShield}

@@ -1,4 +1,6 @@
 import { useStorage } from "@plasmohq/storage/hook"
+import { ReplyShieldType } from "~shield"
+import { Config } from "~config"
 import style from "~scss/options.module.scss"
 import githubIcon from "react:~icon/github.svg"
 import bilibiliIcon from "react:~icon/bilibili.svg"
@@ -7,7 +9,6 @@ import bilibiliIcon from "react:~icon/bilibili.svg"
 function getTextareaValue(look: string): string{
     return String(look).split(",").join("\n")
 }
-
 
 function setTextareaValue(look: string, setValue: (setter: any) => Promise<void>){
     setValue(String(look).split("\n"))
@@ -19,6 +20,9 @@ function setKeyWordsShieldListValue(look: string, setValue: (setter: any) => Pro
 
 
 function options() {
+    const [lookSrcUrl, setSrcUrl] = useStorage("srcUrl")
+    const [lookSrcUrlType, setSrcUrlType] = useStorage("srcUrlType")
+
     // 屏蔽显示
     const [lookShieldInfo, setShieldInfo] = useStorage("shieldInfo")
     const [lookRootAndSubReplyShield, setRootAndSubReplyShield] = useStorage("rootAndSubReplyShield")
@@ -27,6 +31,7 @@ function options() {
     const [lookHomePageCarouselShield, setHomePageCarouselShield] = useStorage("homePageCarouselShield")
     const [lookAdvertiseShield, setAdvertiseShield] = useStorage("advertiseShield")
     const [lookFloatCardShield, setFloatCardShield] = useStorage("floatCardShield")
+    const [lookCardRegularShieldList, setCardRegularShieldList] = useStorage("cardRegularShieldList")
 
     // 评论屏蔽
     const [lookOnReplyShield, setOnReplyShield] = useStorage("onReplyShield")
@@ -48,6 +53,27 @@ function options() {
     // 配置菜单
     const [lookBackgroundUrl, setBackgroundUrl] = useStorage("backgroundUrl")
 
+    async function setSrcUrlShield(){
+        if(lookSrcUrlType == ""){
+            return
+        }
+
+        var url: string = lookSrcUrl
+        url = url.replace("http:", "")
+        url = url.replace("https:", "")
+
+        var list: Array<String> = await Config.config.getStorage().getItem(lookSrcUrlType)
+        if(list[0] == ""){
+            list[0] = url
+        } else {
+            list[list.length] = url
+        }
+        
+        await Config.config.getStorage().setItem(lookSrcUrlType, list)
+        setSrcUrl("")
+        setSrcUrlType("")
+    }
+
     return (
         <div className={style.body} style={{backgroundImage: "url("+lookBackgroundUrl+")"}}><div className={style.cover}>
             <div className={style.title}>
@@ -58,6 +84,44 @@ function options() {
             </div>
 
             <div className={style.config}>
+                {lookSrcUrl != "" ? 
+                    <div className={style["shield-set"]}>
+                        <h1>按右键处屏蔽</h1>
+                        <p>选中:</p>
+                        <img src={lookSrcUrl} alt={lookSrcUrl} />
+
+                        <div className={style["config-item"]}>
+                            <label htmlFor="useShield">
+                                <span>屏蔽类型</span>
+                                <span className={style["config-item-sub-info"]}>设置右键选中元素的屏蔽类型</span>
+                            </label>
+                            <select id="useShield" value={lookSrcUrlType} onChange={(e) => setSrcUrlType(e.target.value)}>
+                                <option value="sailingShieldList">{ReplyShieldType.SAILING}</option>
+                                <option value="avatarFrameShieldList">{ReplyShieldType.AVATAR_FRAME}</option>
+                                <option value="emojiShieldList">{ReplyShieldType.EMOJI}</option>
+                                <option value="emojiSmallShieldList">{ReplyShieldType.EMOJI_SMALL}</option>
+                                <option value="">未设置</option>
+                            </select>
+                        </div>
+
+                        <div className={style["config-item"]}>
+                            <label htmlFor="useShield">
+                                <span>应用屏蔽</span>
+                                <span className={style["config-item-sub-info"]}>设置屏蔽类型后点击, 将应用屏蔽</span>
+                            </label>
+                            <button id="useShield" onClick={async (e) => await setSrcUrlShield()}>应用</button>
+                        </div>
+                        
+                        <div className={style["config-item"]}>
+                            <label htmlFor="useShield">
+                                <span>清空屏蔽</span>
+                                <span className={style["config-item-sub-info"]}>点击, 将删除选中数据, 删除后不会显示 "按右键处屏蔽"</span>
+                            </label>
+                            <button id="useShield" onClick={(e) => setSrcUrl("")}>清空</button>
+                        </div>
+                    </div>
+                : <></>}
+
                 <h1>屏蔽显示</h1>
                 <div className={style["config-item"]}>
                     <label htmlFor="shieldInfo">
@@ -115,6 +179,18 @@ function options() {
                         <option value="true">True</option>
                         <option value="false">False</option>
                     </select>
+                </div>
+
+                <div className={style["config-item"]}>
+                    <label htmlFor="cardRegularShieldList">
+                        <span>正则表达式屏蔽视频卡</span>
+                        <span className={style["config-item-sub-info"]}>使用正则表达式屏蔽所有匹配标题, 匹配方法使用 js 字符串 search()</span>
+                    </label>
+                    <textarea 
+                        id="cardRegularShieldList" 
+                        value={lookCardRegularShieldList} 
+                        onChange={(e) => setCardRegularShieldList(e.target.value)}
+                    ></textarea>
                 </div>
 
                 <hr></hr>
@@ -276,12 +352,12 @@ function options() {
                 <div className={style["config-item"]}>
                     <label htmlFor="regularShieldList">
                         <span>正则表达式屏蔽评论</span>
-                        <span className={style["config-item-sub-info"]}>使用正则表达式屏蔽所有匹配评论, 匹配方法使用 js 字符串 search(), 换行添加多个表达式</span>
+                        <span className={style["config-item-sub-info"]}>使用正则表达式屏蔽所有匹配评论, 匹配方法使用 js 字符串 search()</span>
                     </label>
                     <textarea 
                         id="regularShieldList" 
                         value={lookRegularShieldList} 
-                        onChange={(e) => setTextareaValue(e.target.value, setRegularShieldList)}
+                        onChange={(e) => setRegularShieldList(e.target.value)}
                     ></textarea>
                 </div>
 

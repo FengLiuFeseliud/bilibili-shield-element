@@ -30,6 +30,9 @@
     "host_permissions": [
       "*://www.bilibili.com/*",
       "*://www.bilibili.com"
-    ]
+    ],
+    "permissions": [
+      "contextMenus"
+  ]
   }
 }
