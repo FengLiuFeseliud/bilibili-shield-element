@@ -4,6 +4,7 @@ import {Config} from "config.js"
 abstract class Shield{
     protected mutationNode: Element = null
     protected observer: MutationObserver = new MutationObserver((mutationList, _) => { mutationList.forEach(this.mutationForEach) })
+
     private allNodeSize: number = 0
     private nodeShieldSize: number = 0
 
@@ -55,15 +56,6 @@ abstract class Shield{
         }
     }
 
-    
-    public getAllNodeSize() : number {
-        return  this.allNodeSize
-    }
-
-    public getNodeShieldSize() : number {
-        return  this.nodeShieldSize
-    }
-    
     /**
      * 获取监听节点路径
      */
@@ -110,13 +102,13 @@ class ReplyShield extends Shield{
 
         nodeTest = node.getElementsByClassName("user-sailing-img")
         if(await Config.config.nodeAttributeInConfigList(nodeTest, "sailingShieldList", (config, node) => config == node.getAttribute("src")) 
-                || (nodeTest.length != 0 && await Config.config.getBool("sailingAllShield"))){
+                || (nodeTest.length != 0 && await Config.config.get("sailingAllShield", false))){
             return ReplyShieldType.SAILING
         }
 
         nodeTest = node.getElementsByClassName("bili-avatar-pendent-dom")
         if(await Config.config.nodeAttributeInConfigList(nodeTest, "avatarFrameShieldList", (config, node) => config == node.getElementsByClassName("bili-avatar-img").item(0).getAttribute("data-src"))
-                || (nodeTest.length != 0 && await Config.config.getBool("avatarFrameAllShield"))){
+                || (nodeTest.length != 0 && await Config.config.get("avatarFrameAllShield", false))){
             return ReplyShieldType.AVATAR_FRAME
         }
         
@@ -124,23 +116,23 @@ class ReplyShield extends Shield{
         
         nodeTest = rootReplyNode.getElementsByClassName("emoji-large")
         if(await Config.config.nodeAttributeInConfigList(nodeTest, "emojiShieldList", (config, node) => config == node.getAttribute("src"))
-                || (nodeTest.length != 0 && await Config.config.getBool("emojiAllShield"))){
+                || (nodeTest.length != 0 && await Config.config.get("emojiAllShield", false))){
             return ReplyShieldType.EMOJI
         }
 
         nodeTest = rootReplyNode.getElementsByClassName("emoji-small")
         if(await Config.config.nodeAttributeInConfigList(nodeTest, "emojiSmallShieldList", (config, node) => config == node.getAttribute("src"))
-                || (nodeTest.length != 0 && await Config.config.getBool("emojiSmallAllShield"))){
+                || (nodeTest.length != 0 && await Config.config.get("emojiSmallAllShield", false))){
             return ReplyShieldType.EMOJI_SMALL
         }
         
-        for(let index = 0; index < await Config.config.getInt("userLevelShield"); index++){
+        for(let index = 0; index < await Config.config.get("userLevelShield", -1); index++){
             if(node.getElementsByClassName("user-info").item(0).getElementsByClassName("level-" + index).length != 0){
                 return ReplyShieldType.USER_LEVEL
             }
         }
         
-        var userIdConfig = await Config.config.getInt("userIdShield")
+        var userIdConfig = await Config.config.get("userIdShield", 0)
         if(Number(node.getElementsByClassName("root-reply-avatar").item(0).getAttribute("data-user-id")) > userIdConfig && userIdConfig > 0){
             return ReplyShieldType.USER_ID
         }
@@ -150,17 +142,17 @@ class ReplyShield extends Shield{
             return ReplyShieldType.KEY_WORD
         }
 
-        if(nodeTest.item(0).innerHTML.search(await Config.config.getStorage().get("regularShieldList"))){
+        if(nodeTest.item(0).innerHTML.search(await Config.config.get("regularShieldList", ""))){
             return ReplyShieldType.REGULAR
         }
 
-        if(await Config.config.getBool("jumpSearchShield")){
+        if(await Config.config.get("jumpSearchShield", false)){
             if((<HTMLElement>nodeTest.item(0)).querySelector(".jump-link.search-word") != null){
                 return ReplyShieldType.JUMP_LINK_SEARCH
             }
         }
 
-        if(await Config.config.getBool("jumpNormalShield")){
+        if(await Config.config.get("jumpNormalShield", false)){
             if((<HTMLElement>nodeTest.item(0)).querySelector(".jump-link.normal") != null){
                 return ReplyShieldType.JUMP_LINK_NORMAL
             }
@@ -171,8 +163,8 @@ class ReplyShield extends Shield{
 
     async shieldNode(node: HTMLElement, shieldTpye: ReplyShieldType): Promise<void> {
         var rootReplyNode = <HTMLElement>node.getElementsByClassName("root-reply-container").item(0)
-        if(!(await Config.config.getBool("shieldInfo"))){
-            if(await Config.config.getBool("rootAndSubReplyShield")){
+        if(!(await Config.config.get("shieldInfo", true))){
+            if(await Config.config.get("rootAndSubReplyShield", true)){
                 (<HTMLElement>node.getElementsByClassName("sub-reply-container").item(0)).style.display = 'none';
                 (<HTMLElement>node.getElementsByClassName("bottom-line").item(0)).style.display = 'none'
             }
@@ -192,7 +184,7 @@ class ReplyShield extends Shield{
         shieldSet.style.paddingLeft = "5px"
 
         shieldSet.innerHTML = "展开"
-        if(await Config.config.getBool("rootAndSubReplyShield")){
+        if(await Config.config.get("rootAndSubReplyShield", true)){
             var subReplyNode = <HTMLElement>node.getElementsByClassName("sub-reply-container").item(0)
             shieldSet.onclick = function(){
                 if(rootReplyNode.style.display == 'none'){
@@ -241,19 +233,19 @@ class CardShield extends Shield{
 
     async getShieldNodeType(node: HTMLElement): Promise<CaedShieldType> {
         var className = node.getAttribute("class")
-        if(await Config.config.getBool("homePageCarouselShield") && className == "recommended-swipe grid-anchor"){
+        if(await Config.config.get("homePageCarouselShield", false) && className == "recommended-swipe grid-anchor"){
             if(className == "recommended-swipe grid-anchor"){
                 return CaedShieldType.CAROUSEL
             }
         }
 
-        if(await Config.config.getBool("advertiseShield")){
+        if(await Config.config.get("advertiseShield", false)){
             if(node.getElementsByClassName("bili-video-card__info--ad").length != 0){
                 return CaedShieldType.ADVERTISE
             }
         }
 
-        if(await Config.config.getBool("floatCardShield")){
+        if(await Config.config.get("floatCardShield", false)){
             if(className.indexOf("single-card") != -1){
                 return CaedShieldType.SINGLE_CARD
             }
@@ -266,12 +258,14 @@ class CardShield extends Shield{
 
         if(className.indexOf("single-card") == -1){
             nodeTest = node.getElementsByClassName("bili-video-card__info--tit")
-            if(nodeTest.item(0).getAttribute("title").search(await Config.config.getStorage().get("cardRegularShieldList")) != -1){
+            var cardRegularShieldList: string = await Config.config.get("cardRegularShieldList", "")
+            if(nodeTest.item(0).getAttribute("title").search(cardRegularShieldList) != -1 && cardRegularShieldList != ""){
                 return CaedShieldType.REGULAR
             }
         } else {
             nodeTest = node.getElementsByClassName("title")
-            if(nodeTest.item(0).getAttribute("title").search(await Config.config.getStorage().get("cardRegularShieldList")) != -1){
+            var cardRegularShieldList: string = await Config.config.get("cardRegularShieldList", "")
+            if(nodeTest.item(0).getAttribute("title").search(cardRegularShieldList) != -1 && cardRegularShieldList != ""){
                 return CaedShieldType.REGULAR
             }
         }
@@ -280,7 +274,6 @@ class CardShield extends Shield{
     }
 
     async shieldNode(node: HTMLElement, shieldType: CaedShieldType): Promise<void> {
-        console.log(shieldType)
         if(shieldType == CaedShieldType.CAROUSEL){
             node.style.display = "none"
             return

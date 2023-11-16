@@ -1,9 +1,16 @@
-import { useState } from "react"
+import { useStorage } from "@plasmohq/storage/hook"
+import style from "~css/popup.module.css"
+
 
 function IndexPopup() {
-  const [data, setData] = useState("")
+	const [lookThemes] = useStorage("themes")
 
-  return (<div></div>)
+	document.querySelector(":root").setAttribute("data-themes", lookThemes)
+  	return (
+		<div className={style.body}>
+			
+		</div>
+	)
 }
 
 export default IndexPopup

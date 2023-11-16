@@ -5,16 +5,16 @@ class Config{
     public static config: Config = new Config()
     private storage: Storage = new Storage()
 
-    public getStorage(): Storage{
-        return this.storage
+    public async get<T>(configName: String, defaultValue: T): Promise<T>{
+        var value: T = await this.storage.get(<string>configName)
+        if(value){
+            return value
+        }
+        return defaultValue
     }
 
-    public async getInt(configName: String): Promise<number>{
-        return Math.trunc(await this.storage.get(<string>configName))
-    }
-
-    public async getBool(configName: String): Promise<boolean>{
-        return (await this.storage.get(<string>configName)) == "true"
+    public async set<T>(configName: String, value: T){
+        await this.storage.setItem(<string>configName, value)
     }
 
     public async nodeAttributeInConfigList(
@@ -26,7 +26,7 @@ class Config{
             return false;
         }
         
-        if((<Array<String>>await this.storage.get(<string>configListName)).find((config) => predicate(config, <HTMLElement>value.item(0))) == undefined){
+        if((<Array<String>>await this.get(<string>configListName, [])).find((config) => predicate(config, <HTMLElement>value.item(0))) == undefined){
             return false;
         }
 

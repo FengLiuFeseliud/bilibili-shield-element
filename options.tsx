@@ -1,10 +1,12 @@
 import { useStorage } from "@plasmohq/storage/hook"
 import { ReplyShieldType } from "~shield"
 import { Config } from "~config"
-import style from "~scss/options.module.scss"
+import style from "~css/options.module.css"
+
 import githubIcon from "react:~icon/github.svg"
 import bilibiliIcon from "react:~icon/bilibili.svg"
-
+import tyIcon from "react:~icon/taiyang.svg"
+import yjIcon from "react:~icon/yejing.svg"
 
 function getTextareaValue(look: string): string{
     return String(look).split(",").join("\n")
@@ -20,38 +22,40 @@ function setKeyWordsShieldListValue(look: string, setValue: (setter: any) => Pro
 
 
 function options() {
-    const [lookSrcUrl, setSrcUrl] = useStorage("srcUrl")
-    const [lookSrcUrlType, setSrcUrlType] = useStorage("srcUrlType")
+    const [lookThemes, setThemes] = useStorage("themes", "default")
+
+    const [lookSrcUrl, setSrcUrl] = useStorage("srcUrl", "")
+    const [lookSrcUrlType, setSrcUrlType] = useStorage("srcUrlType", "")
 
     // 屏蔽显示
-    const [lookShieldInfo, setShieldInfo] = useStorage("shieldInfo")
-    const [lookRootAndSubReplyShield, setRootAndSubReplyShield] = useStorage("rootAndSubReplyShield")
+    const [lookShieldInfo, setShieldInfo] = useStorage("shieldInfo", "true")
+    const [lookRootAndSubReplyShield, setRootAndSubReplyShield] = useStorage("rootAndSubReplyShield", "true")
 
     // 视频卡屏蔽
-    const [lookHomePageCarouselShield, setHomePageCarouselShield] = useStorage("homePageCarouselShield")
-    const [lookAdvertiseShield, setAdvertiseShield] = useStorage("advertiseShield")
-    const [lookFloatCardShield, setFloatCardShield] = useStorage("floatCardShield")
-    const [lookCardRegularShieldList, setCardRegularShieldList] = useStorage("cardRegularShieldList")
+    const [lookHomePageCarouselShield, setHomePageCarouselShield] = useStorage("homePageCarouselShield", "false")
+    const [lookAdvertiseShield, setAdvertiseShield] = useStorage("advertiseShield", "false")
+    const [lookFloatCardShield, setFloatCardShield] = useStorage("floatCardShield", "false")
+    const [lookCardRegularShieldList, setCardRegularShieldList] = useStorage("cardRegularShieldList", "")
 
     // 评论屏蔽
-    const [lookOnReplyShield, setOnReplyShield] = useStorage("onReplyShield")
-    const [lookUserIdShield, setUserIdShield] = useStorage("userIdShield")
-    const [lookUserLevelShield, setUserLevelShield] = useStorage("userLevelShield")
-    const [lookJumpSearchShield, setJumpSearchShield] = useStorage("jumpSearchShield")
-    const [lookJumpNormalShield, setJumpNormalShield] = useStorage("jumpNormalShield")
-    const [lookSailingAllShield, setSailingAllShield] = useStorage("sailingAllShield")
-    const [lookSailingShieldList, setSailingShieldList] = useStorage("sailingShieldList")
-    const [lookAvatarFrameAllShield, setAvatarFrameAllShield] = useStorage("avatarFrameAllShield")
-    const [lookAvatarFrameShieldList, setAvatarFrameShieldList] = useStorage("avatarFrameShieldList")
-    const [lookEmojiAllShield, setEmojiAllShield] = useStorage("emojiAllShield")
-    const [lookEmojiShieldList, setEmojiShieldList] = useStorage("emojiShieldList")
-    const [lookEmojiSmallAllShield, setEmojiSmallAllShield] = useStorage("emojiSmallAllShield")
-    const [lookEmojiSmallShieldList, setEmojiSmallShieldList] = useStorage("emojiSmallShieldList")
-    const [lookKeyWordsShieldList, setKeyWordsShieldList] = useStorage("keyWordsShieldList")
-    const [lookRegularShieldList, setRegularShieldList] = useStorage("regularShieldList")
+    const [lookOnReplyShield, setOnReplyShield] = useStorage("onReplyShield", "")
+    const [lookUserIdShield, setUserIdShield] = useStorage("userIdShield", "0")
+    const [lookUserLevelShield, setUserLevelShield] = useStorage("userLevelShield", "-1")
+    const [lookJumpSearchShield, setJumpSearchShield] = useStorage("jumpSearchShield", "false")
+    const [lookJumpNormalShield, setJumpNormalShield] = useStorage("jumpNormalShield", "false")
+    const [lookSailingAllShield, setSailingAllShield] = useStorage("sailingAllShield", "false")
+    const [lookSailingShieldList, setSailingShieldList] = useStorage("sailingShieldList", "")
+    const [lookAvatarFrameAllShield, setAvatarFrameAllShield] = useStorage("avatarFrameAllShield", "false")
+    const [lookAvatarFrameShieldList, setAvatarFrameShieldList] = useStorage("avatarFrameShieldList", "")
+    const [lookEmojiAllShield, setEmojiAllShield] = useStorage("emojiAllShield", "false")
+    const [lookEmojiShieldList, setEmojiShieldList] = useStorage("emojiShieldList", "")
+    const [lookEmojiSmallAllShield, setEmojiSmallAllShield] = useStorage("emojiSmallAllShield", "false")
+    const [lookEmojiSmallShieldList, setEmojiSmallShieldList] = useStorage("emojiSmallShieldList", "")
+    const [lookKeyWordsShieldList, setKeyWordsShieldList] = useStorage("keyWordsShieldList", "")
+    const [lookRegularShieldList, setRegularShieldList] = useStorage("regularShieldList", "")
 
     // 配置菜单
-    const [lookBackgroundUrl, setBackgroundUrl] = useStorage("backgroundUrl")
+    const [lookBackgroundUrl, setBackgroundUrl] = useStorage("backgroundUrl", "")
 
     async function setSrcUrlShield(){
         if(lookSrcUrlType == ""){
@@ -62,24 +66,34 @@ function options() {
         url = url.replace("http:", "")
         url = url.replace("https:", "")
 
-        var list: Array<String> = await Config.config.getStorage().getItem(lookSrcUrlType)
+        var list: Array<String> = await Config.config.get(lookSrcUrlType, [""])
         if(list[0] == ""){
             list[0] = url
         } else {
             list[list.length] = url
         }
         
-        await Config.config.getStorage().setItem(lookSrcUrlType, list)
         setSrcUrl("")
         setSrcUrlType("")
     }
 
+    document.querySelector(":root").setAttribute("data-themes", lookThemes)
     return (
-        <div className={style.body} style={{backgroundImage: "url("+lookBackgroundUrl+")"}}><div className={style.cover}>
+        <div style={{backgroundImage: "url("+lookBackgroundUrl+")"}}><div className={style.cover}>
             <div className={style.title}>
                 <span className={style.name}><span>Bilibili</span> Shield Element</span><span className={style.version}>0.2.0</span>
                 <a href="https://github.com/FengLiuFeseliud/bilibili-shield-element">{githubIcon(null)}</a>
                 <a href="https://space.bilibili.com/34394509">{bilibiliIcon(null)}</a>
+                <a onClick={(e) => {
+                    var root = document.querySelector(":root")
+                    if(root.getAttribute("data-themes") == "default"){
+                        setThemes("dark")
+                        root.setAttribute("data-themes", "dark")
+                    } else {
+                        setThemes("default")
+                        root.setAttribute("data-themes", "default")
+                    }
+                }}>{lookThemes == "default" ? yjIcon(null) : tyIcon(null)}</a>
                 <hr></hr>
             </div>
 
@@ -87,15 +101,15 @@ function options() {
                 {lookSrcUrl != "" ? 
                     <div className={style["shield-set"]}>
                         <h1>按右键处屏蔽</h1>
-                        <p>选中:</p>
+                        <p>选中: <a href={lookSrcUrl}>{lookSrcUrl}</a></p>
                         <img src={lookSrcUrl} alt={lookSrcUrl} />
 
                         <div className={style["config-item"]}>
-                            <label htmlFor="useShield">
+                            <label htmlFor="srcType">
                                 <span>屏蔽类型</span>
                                 <span className={style["config-item-sub-info"]}>设置右键选中元素的屏蔽类型</span>
                             </label>
-                            <select id="useShield" value={lookSrcUrlType} onChange={(e) => setSrcUrlType(e.target.value)}>
+                            <select id="srcType" value={lookSrcUrlType} onChange={(e) => setSrcUrlType(e.target.value)}>
                                 <option value="sailingShieldList">{ReplyShieldType.SAILING}</option>
                                 <option value="avatarFrameShieldList">{ReplyShieldType.AVATAR_FRAME}</option>
                                 <option value="emojiShieldList">{ReplyShieldType.EMOJI}</option>
@@ -113,11 +127,11 @@ function options() {
                         </div>
                         
                         <div className={style["config-item"]}>
-                            <label htmlFor="useShield">
+                            <label htmlFor="rmShield">
                                 <span>清空屏蔽</span>
                                 <span className={style["config-item-sub-info"]}>点击, 将删除选中数据, 删除后不会显示 "按右键处屏蔽"</span>
                             </label>
-                            <button id="useShield" onClick={(e) => setSrcUrl("")}>清空</button>
+                            <button id="rmShield" onClick={(e) => setSrcUrl("")}>清空</button>
                         </div>
                     </div>
                 : <></>}
