@@ -42,11 +42,15 @@ a {
 
 a:hover {
     color: var(--link-hover-color);
-} 
+}
+
+.background {
+    background-position: center;
+    background-attachment: fixed;
+    background-size: cover;
+}
 
 body {
-    background-repeat: no-repeat;
-    background-size: cover;
     background-color: var(--body-color);
 
     .cover {
@@ -186,6 +190,22 @@ hr {
         font-size: 15px;
         text-align: center;
     }
+
+    p {
+        font: 1.6rem bold;
+        text-align: center;
+    }
+
+    .img-list {
+        width: 30%;
+        display: block;
+        margin: 10px auto;
+    }
+
+    .img-list img {
+        width: 49%;
+        opacity: var(--input-opacity);
+    }
 }
 
 .shield-set {
@@ -197,7 +217,6 @@ hr {
     }
 
     img {
-        display: block;
         margin: 10px auto;
         background-color: var(--input-bc);
         opacity: var(--input-opacity);

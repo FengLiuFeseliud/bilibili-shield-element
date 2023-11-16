@@ -3,10 +3,13 @@ import { ReplyShieldType } from "~shield"
 import { Config } from "~config"
 import style from "~css/options.module.css"
 
-import githubIcon from "react:~icon/github.svg"
-import bilibiliIcon from "react:~icon/bilibili.svg"
-import tyIcon from "react:~icon/taiyang.svg"
-import yjIcon from "react:~icon/yejing.svg"
+import githubIcon from "react:~assets/icon/github.svg"
+import bilibiliIcon from "react:~assets/icon/bilibili.svg"
+import tyIcon from "react:~assets/icon/taiyang.svg"
+import yjIcon from "react:~assets/icon/yejing.svg"
+
+import afdian from "data-base64:~assets/afdian.png"
+import zfb from "data-base64:~assets/zfb.png"
 
 function getTextareaValue(look: string): string{
     return String(look).split(",").join("\n")
@@ -80,7 +83,7 @@ function options() {
 
     document.querySelector(":root").setAttribute("data-themes", lookThemes)
     return (
-        <div style={{backgroundImage: "url("+lookBackgroundUrl+")"}}><div className={style.cover}>
+        <div style={{backgroundImage: "url("+lookBackgroundUrl+")"}} className={style.background}><div className={style.cover}>
             <div className={style.title}>
                 <span className={style.name}><span>Bilibili</span> Shield Element</span><span className={style.version}>0.2.0</span>
                 <a href="https://github.com/FengLiuFeseliud/bilibili-shield-element">{githubIcon(null)}</a>
@@ -396,6 +399,11 @@ function options() {
                 <a href="https://www.mcmod.cn/author/28469.html">McMod: FengLiuFeseliud</a>
                 <a href="https://modrinth.com/user/FengLiuFeseliud">Modrinth: FengLiuFeseliud</a>
                 <a href="https://www.pixiv.net/users/76113338">Pixiv: FengLiuFeseliud</a>
+                <p>扩展好用的话, 请作者喝瓶水?</p>
+                <div className={style["img-list"]}>'
+                    <img src={afdian} />
+                    <img src={zfb} />
+                </div>
             </div>
         </div></div>
     )
