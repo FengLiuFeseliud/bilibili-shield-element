@@ -15,7 +15,7 @@ chrome.contextMenus.create({
 });
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {
-    Config.config.getStorage().setItem("srcUrl", info.srcUrl)
+    Config.config.set("srcUrl", info.srcUrl)
     chrome.tabs.create({
         url: `chrome-extension://${chrome.runtime.id}/options.html`
     })
