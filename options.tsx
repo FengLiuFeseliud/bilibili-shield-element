@@ -73,6 +73,7 @@ function options() {
             list[list.length] = url
         }
         
+        await Config.config.set(lookSrcUrlType, list)
         setSrcUrl("")
         setSrcUrlType("")
     }
