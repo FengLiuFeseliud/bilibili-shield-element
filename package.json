@@ -1,7 +1,7 @@
 {
   "name": "bilibili-shield-element",
   "displayName": "Bilibili shield element",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "屏蔽 BiliBili 评论, 眼不见心不烦",
   "author": "FengLiuFeseliud",
   "scripts": {
@@ -10,13 +10,16 @@
     "test": "plasmo test"
   },
   "dependencies": {
+    "@plasmohq/messaging": "^0.5.0",
     "@plasmohq/storage": "^1.8.1",
-    "plasmo": "0.83.0",
+    "plasmo": "0.84.0",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
   "devDependencies": {
     "@ianvs/prettier-plugin-sort-imports": "4.1.0",
+    "@parcel/optimizer-data-url": "2.9.3",
+    "@parcel/transformer-inline-string": "2.9.3",
     "@types/chrome": "0.0.245",
     "@types/node": "20.5.9",
     "@types/react": "18.2.21",
@@ -27,7 +30,11 @@
   },
   "manifest": {
     "host_permissions": [
-      "*://www.bilibili.com/*"
+      "*://www.bilibili.com/*",
+      "*://www.bilibili.com"
+    ],
+    "permissions": [
+      "contextMenus"
     ]
   }
 }
