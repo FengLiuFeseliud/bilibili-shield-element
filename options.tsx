@@ -1,5 +1,5 @@
 import { useStorage } from "@plasmohq/storage/hook"
-import { ReplyShieldType } from "~shield"
+import { ReplyShieldType } from "~shield/replyShield"
 import { Config } from "~config"
 import style from "~css/options.module.css"
 
@@ -33,6 +33,7 @@ function options() {
     // 屏蔽显示
     const [lookShieldInfo, setShieldInfo] = useStorage("shieldInfo", "true")
     const [lookRootAndSubReplyShield, setRootAndSubReplyShield] = useStorage("rootAndSubReplyShield", "true")
+    const [lookSubShieldInfo, setSubShieldInfo] = useStorage("subShieldInfo", "true")
 
     // 视频卡屏蔽
     const [lookHomePageCarouselShield, setHomePageCarouselShield] = useStorage("homePageCarouselShield", "false")
@@ -41,7 +42,8 @@ function options() {
     const [lookCardRegularShieldList, setCardRegularShieldList] = useStorage("cardRegularShieldList", "")
 
     // 评论屏蔽
-    const [lookOnReplyShield, setOnReplyShield] = useStorage("onReplyShield", "")
+    const [lookOnReplyShield, setOnReplyShield] = useStorage("onReplyShield", "true")
+    const [lookOnSubReplyShield, setOnSubReplyShield] = useStorage("onSubReplyShield", "true")
     const [lookUserIdShield, setUserIdShield] = useStorage("userIdShield", "0")
     const [lookUserLevelShield, setUserLevelShield] = useStorage("userLevelShield", "-1")
     const [lookJumpSearchShield, setJumpSearchShield] = useStorage("jumpSearchShield", "false")
@@ -163,6 +165,17 @@ function options() {
                     </select>
                 </div>
 
+                <div className={style["config-item"]}>
+                    <label htmlFor="subShieldInfo">
+                        <span>屏蔽楼回复后显示屏蔽信息</span>
+                        <span className={style["config-item-sub-info"]}>屏蔽楼回复后, 原区域显示屏蔽信息, 并可以控制屏蔽回复是否显示, true 显示</span>
+                    </label>
+                    <select id="subShieldInfo" value={lookSubShieldInfo} onChange={(e) => setSubShieldInfo(e.target.value)}>
+                        <option value="true">True</option>
+                        <option value="false">False</option>
+                    </select>
+                </div>
+
                 <hr></hr>
 
                 <h1>视频卡屏蔽</h1>
@@ -217,9 +230,20 @@ function options() {
                 <div className={style["config-item"]}>
                     <label htmlFor="onReplyShield">
                         <span>启用评论屏蔽</span>
-                        <span className={style["config-item-sub-info"]}>控制 Bilibili shield element 是否屏蔽评论, true 启动屏蔽</span>
+                        <span className={style["config-item-sub-info"]}>控制是否屏蔽评论, true 启动屏蔽</span>
                     </label>
                     <select id="onReplyShield" value={lookOnReplyShield} onChange={(e) => setOnReplyShield(e.target.value)}>
+                        <option value="true">True</option>
+                        <option value="false">False</option>
+                    </select>
+                </div>
+
+                <div className={style["config-item"]}>
+                    <label htmlFor="onSubReplyShield">
+                        <span>启用评论楼回复屏蔽</span>
+                        <span className={style["config-item-sub-info"]}>控制是否屏蔽评论楼回复, true 启动屏蔽</span>
+                    </label>
+                    <select id="onSubReplyShield" value={lookOnSubReplyShield} onChange={(e) => setOnSubReplyShield(e.target.value)}>
                         <option value="true">True</option>
                         <option value="false">False</option>
                     </select>

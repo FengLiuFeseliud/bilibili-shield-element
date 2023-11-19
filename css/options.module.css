@@ -217,6 +217,7 @@ hr {
     }
 
     img {
+        display: block;
         margin: 10px auto;
         background-color: var(--input-bc);
         opacity: var(--input-opacity);

@@ -1,5 +1,5 @@
 import type { PlasmoCSConfig  } from "plasmo"
-import {CardShield} from "~shield"
+import {CardShield} from "~shield/shield"
 
 export const cardShieldConfig: PlasmoCSConfig = {
   matches: [

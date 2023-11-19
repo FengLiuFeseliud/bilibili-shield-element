@@ -6,8 +6,11 @@ class Config{
     private storage: Storage = new Storage()
 
     public async get<T>(configName: String, defaultValue: T): Promise<T>{
-        var value: T = await this.storage.get(<string>configName)
+        var value: T = await <Promise<T>>this.storage.get(<string>configName)
         if(value){
+            if(typeof value == "string"){
+                return JSON.parse(value)
+            }
             return value
         }
         return defaultValue

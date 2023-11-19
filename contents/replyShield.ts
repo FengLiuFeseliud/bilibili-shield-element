@@ -1,5 +1,5 @@
 import type { PlasmoCSConfig } from "plasmo"
-import { ReplyShield } from "~shield"
+import { ReplyShield } from "~shield/replyShield"
 import { Config } from "~config"
 
 export const replyShieldCnfig: PlasmoCSConfig = {
