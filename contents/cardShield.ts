@@ -1,5 +1,5 @@
 import type { PlasmoCSConfig  } from "plasmo"
-import {CardShield} from "~shield/shield"
+import {CardShield} from "~shield/cardShield"
 
 export const cardShieldConfig: PlasmoCSConfig = {
   matches: [
@@ -9,7 +9,7 @@ export const cardShieldConfig: PlasmoCSConfig = {
 }
 
 
-console.log("bilibili-shield-element: 初始化....")
 window.addEventListener("load", async () => {
+  console.log("bilibili-shield-element: 视频卡片屏蔽初始化....")
   await new CardShield().start()
 })

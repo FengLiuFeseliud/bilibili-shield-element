@@ -1,7 +1,7 @@
 {
   "name": "bilibili-shield-element",
   "displayName": "Bilibili shield element",
-  "version": "0.2.0",
+  "version": "0.2.2",
   "description": "屏蔽 BiliBili 评论, 眼不见心不烦",
   "author": "FengLiuFeseliud",
   "scripts": {
@@ -12,7 +12,7 @@
   "dependencies": {
     "@plasmohq/messaging": "^0.5.0",
     "@plasmohq/storage": "^1.8.1",
-    "plasmo": "0.84.0",
+    "plasmo": "0.88.0",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },

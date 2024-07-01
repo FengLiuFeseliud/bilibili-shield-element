@@ -10,9 +10,9 @@ export const replyShieldCnfig: PlasmoCSConfig = {
 	all_frames: true
 }
 
-console.log("bilibili-shield-element: 初始化....")
 window.addEventListener("load", async () => {
 	if (await Config.config.get("onReplyShield", true) ) {
+		console.log("bilibili-shield-element: 回复屏蔽初始化....")
 		await new ReplyShield().start()
 	}
 })

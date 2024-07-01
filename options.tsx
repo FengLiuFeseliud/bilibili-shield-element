@@ -39,7 +39,12 @@ function options() {
     const [lookHomePageCarouselShield, setHomePageCarouselShield] = useStorage("homePageCarouselShield", "false")
     const [lookAdvertiseShield, setAdvertiseShield] = useStorage("advertiseShield", "false")
     const [lookFloatCardShield, setFloatCardShield] = useStorage("floatCardShield", "false")
+    const [lookLikeCardShield, setLikeCardShield] = useStorage("likeCardShield", "false")
+    const [lookSubscriptionCardShield, setSubscriptionCardShield] = useStorage("subscriptionCardShield", "false")
     const [lookCardRegularShieldList, setCardRegularShieldList] = useStorage("cardRegularShieldList", "")
+
+    // 直播屏蔽
+    const [lookAreaMaskShield, setAreaMaskShield] = useStorage("areaMaskShield", "false")
 
     // 评论屏蔽
     const [lookOnReplyShield, setOnReplyShield] = useStorage("onReplyShield", "true")
@@ -87,7 +92,7 @@ function options() {
     return (
         <div style={{backgroundImage: "url("+lookBackgroundUrl+")"}} className={style.background}><div className={style.cover}>
             <div className={style.title}>
-                <span className={style.name}><span>Bilibili</span> Shield Element</span><span className={style.version}>0.2.0</span>
+                <span className={style.name}><span>Bilibili</span> Shield Element</span><span className={style.version}>0.2.2</span>
                 <a href="https://github.com/FengLiuFeseliud/bilibili-shield-element">{githubIcon(null)}</a>
                 <a href="https://space.bilibili.com/34394509">{bilibiliIcon(null)}</a>
                 <a onClick={(e) => {
@@ -213,6 +218,28 @@ function options() {
                 </div>
 
                 <div className={style["config-item"]}>
+                    <label htmlFor="likeCardShield">
+                        <span>点赞推荐视频卡屏蔽</span>
+                        <span className={style["config-item-sub-info"]}>屏蔽点赞推荐视频卡, 如 UP 主边上显示几万点赞的视频卡, true 启动屏蔽</span>
+                    </label>
+                    <select id="likeCardShield" value={lookLikeCardShield} onChange={(e) => setLikeCardShield(e.target.value)}>
+                        <option value="true">True</option>
+                        <option value="false">False</option>
+                    </select>
+                </div>
+
+                <div className={style["config-item"]}>
+                    <label htmlFor="subscriptionCardShield">
+                        <span>已关注推荐视频卡屏蔽</span>
+                        <span className={style["config-item-sub-info"]}>屏蔽已关注推荐视频卡, 如 UP 主边上显示已关注的视频卡, true 启动屏蔽</span>
+                    </label>
+                    <select id="subscriptionCardShield" value={lookSubscriptionCardShield} onChange={(e) => setSubscriptionCardShield(e.target.value)}>
+                        <option value="true">True</option>
+                        <option value="false">False</option>
+                    </select>
+                </div>
+
+                <div className={style["config-item"]}>
                     <label htmlFor="cardRegularShieldList">
                         <span>正则表达式屏蔽视频卡</span>
                         <span className={style["config-item-sub-info"]}>使用正则表达式屏蔽所有匹配标题, 匹配方法使用 js 字符串 search()</span>
@@ -222,6 +249,20 @@ function options() {
                         value={lookCardRegularShieldList} 
                         onChange={(e) => setCardRegularShieldList(e.target.value)}
                     ></textarea>
+                </div>
+
+                <hr></hr>
+
+                <h1>直播间屏蔽</h1>
+                <div className={style["config-item"]}>
+                    <label htmlFor="areaMaskShield">
+                        <span>屏蔽直播间画面的马赛克</span>
+                        <span className={style["config-item-sub-info"]}>将马赛克设置为 0px 达到屏蔽效果, true 启动屏蔽</span>
+                    </label>
+                    <select id="areaMaskShield" value={lookAreaMaskShield} onChange={(e) => setAreaMaskShield(e.target.value)}>
+                        <option value="true">True</option>
+                        <option value="false">False</option>
+                    </select>
                 </div>
 
                 <hr></hr>
@@ -260,7 +301,7 @@ function options() {
                 <div className={style["config-item"]}>
                     <label htmlFor="userIdShield">
                         <span>按用户 uid 屏蔽评论</span>
-                        <span className={style["config-item-sub-info"]}>屏蔽指定 uid 以上的所有评论, 值为 0 时关闭</span>
+                        <span className={style["config-item-sub-info"]}>屏蔽指定 uid 以下的所有评论, 值为 0 时关闭</span>
                     </label>
                     <input id="userIdShield" type="text" value={lookUserIdShield} onChange={(e) => setUserIdShield(e.target.value)}/>
                 </div>
