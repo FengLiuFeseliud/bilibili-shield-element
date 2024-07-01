@@ -43,6 +43,9 @@ function options() {
     const [lookSubscriptionCardShield, setSubscriptionCardShield] = useStorage("subscriptionCardShield", "false")
     const [lookCardRegularShieldList, setCardRegularShieldList] = useStorage("cardRegularShieldList", "")
 
+    // 直播屏蔽
+    const [lookAreaMaskShield, setAreaMaskShield] = useStorage("areaMaskShield", "false")
+
     // 评论屏蔽
     const [lookOnReplyShield, setOnReplyShield] = useStorage("onReplyShield", "true")
     const [lookOnSubReplyShield, setOnSubReplyShield] = useStorage("onSubReplyShield", "true")
@@ -89,7 +92,7 @@ function options() {
     return (
         <div style={{backgroundImage: "url("+lookBackgroundUrl+")"}} className={style.background}><div className={style.cover}>
             <div className={style.title}>
-                <span className={style.name}><span>Bilibili</span> Shield Element</span><span className={style.version}>0.2.1</span>
+                <span className={style.name}><span>Bilibili</span> Shield Element</span><span className={style.version}>0.2.2</span>
                 <a href="https://github.com/FengLiuFeseliud/bilibili-shield-element">{githubIcon(null)}</a>
                 <a href="https://space.bilibili.com/34394509">{bilibiliIcon(null)}</a>
                 <a onClick={(e) => {
@@ -246,6 +249,20 @@ function options() {
                         value={lookCardRegularShieldList} 
                         onChange={(e) => setCardRegularShieldList(e.target.value)}
                     ></textarea>
+                </div>
+
+                <hr></hr>
+
+                <h1>直播间屏蔽</h1>
+                <div className={style["config-item"]}>
+                    <label htmlFor="areaMaskShield">
+                        <span>屏蔽直播间画面的马赛克</span>
+                        <span className={style["config-item-sub-info"]}>将马赛克设置为 0px 达到屏蔽效果, true 启动屏蔽</span>
+                    </label>
+                    <select id="areaMaskShield" value={lookAreaMaskShield} onChange={(e) => setAreaMaskShield(e.target.value)}>
+                        <option value="true">True</option>
+                        <option value="false">False</option>
+                    </select>
                 </div>
 
                 <hr></hr>

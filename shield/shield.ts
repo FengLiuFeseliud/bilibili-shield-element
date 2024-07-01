@@ -34,6 +34,7 @@ abstract class Shield{
 
         this.observer.observe(this.mutationNode, {
             childList: true,
+            attributes: true,
             subtree: true
         })
         console.log("bilibili-shield-element: " + this + " 加载")
